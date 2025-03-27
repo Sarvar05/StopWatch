@@ -1,4 +1,4 @@
-package com.example.myapplication
+package com.example.myapplication.stop_watch
 
 import android.app.Application
 import android.content.Context
@@ -16,11 +16,12 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 import java.util.Locale
 
 private val Context.dataStore by preferencesDataStore(name = "stopwatch_prefs")
+
 
 class WatchViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
@@ -45,15 +46,15 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
 
             _seconds.value = savedTime
             isRunning = wasRunning
+
+            if (wasRunning) {
+                startTimer(savedTime)
+            }
         }
     }
 
-
-    private fun startTimer() {
-        if (job?.isActive == true) return
-        isRunning = true
-        startTime = SystemClock.elapsedRealtime() - (_seconds.value * 1000)
-
+    private fun startTimer(savedTime: Long) {
+        startTime = SystemClock.elapsedRealtime() - (savedTime * 1000)
         job = viewModelScope.launch(Dispatchers.IO) {
             while (isActive) {
                 val newTime = (SystemClock.elapsedRealtime() - startTime) / 1000
@@ -67,14 +68,14 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60
         val sec = seconds % 60
-        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, sec)
+        return String.Companion.format(Locale.US, "%02d:%02d:%02d", hours, minutes, sec)
     }
 
     fun resetTimer() {
         job?.cancel()
         _seconds.value = 0L
         startTime = SystemClock.elapsedRealtime()
-        startTimer()
+
         saveState()
     }
 
@@ -86,7 +87,8 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
 
     fun resumeTimer() {
         if (!isRunning) {
-            startTimer()
+            startTimer(_seconds.value)
+            isRunning = true
         }
     }
 
@@ -95,7 +97,6 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
             dataStore.edit { prefs ->
                 prefs[KEY_TIME] = _seconds.value
                 prefs[KEY_RUNNING] = isRunning
-                prefs[KEY_START_TIME] = SystemClock.elapsedRealtime()
             }
         }
     }

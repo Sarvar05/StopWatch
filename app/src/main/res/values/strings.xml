@@ -4,4 +4,20 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="clear_text">clear</string>
     <string name="time_format">00:00:00</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="title_activity_compose">Compose</string>
+    <string name="title_activity_weather">Weather</string>
+    <string name="title_activity_weather_acitivity">WeatherAcitivity</string>
+    <string name="title_activity_weather_screen">WeatherScreen</string>
+    <string name="title_activity_drawer_screen">DrawerScreen</string>
+    <string name="loading">Загрузка...</string>
+    <string name="unknown">Неизвестно</string>
+    <string name="updated">Обновлено</string>
+    <string name="weather_title">Погода в Ташкенте</string>
+    <string name="update_button">Обновить</string>
+    <string name="wind">Ветер</string>
+    <string name="humidity">Влажность</string>
+    <string name="error">Ошибка</string>
+    <string name="title_activity_news_list_screen">NewsListScreen</string>
+    <string name="title_activity_news_screen">NewsScreen</string>
 </resources>
