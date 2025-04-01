@@ -15,11 +15,11 @@ fun AppNavigation(navController: NavHostController) {
     NavHost(navController = navController, startDestination = Screens.WeatherScreen.route) {
         Screens.entries.forEach { screen ->
             composable(screen.route) {
-                when (screen) {
-                    Screens.WeatherScreen -> WeatherScreen()
-                    Screens.Stopwatch -> Stopwatch()
-                    Screens.NewsApp-> NewsApp()
-                }
+//                when (screen) {
+//                    Screens.WeatherScreen -> WeatherScreen()
+//                    Screens.Stopwatch -> Stopwatch()
+//
+//                }
             }
         }
     }

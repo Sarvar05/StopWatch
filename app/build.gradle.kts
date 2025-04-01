@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
+    
 }
 
 android {
@@ -37,11 +38,13 @@ android {
         jvmTarget = "11"
     }
 
+
     buildFeatures {
         viewBinding = true
         compose = true
 
     }
+
 
     composeOptions {
         kotlinCompilerExtensionVersion = "1.3.0"
@@ -66,9 +69,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
-    implementation("androidx.datastore:datastore-preferences:1.0.0")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
@@ -91,9 +91,17 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
     implementation("androidx.compose.ui:ui-tooling-preview:1.5.0")
     implementation("androidx.room:room-runtime:2.5.0")
-    ksp("androidx.room:room-compiler:2.5.0")
+    ksp("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.5.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
+    implementation ("androidx.webkit:webkit:1.5.0")
+    implementation ("org.jsoup:jsoup:1.15.2")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    implementation ("io.coil-kt:coil-compose:2.1.0")
+    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
 }
