@@ -1,7 +1,8 @@
 package com.example.myapplication.news.viewmodel
 
-
 import android.net.Uri
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +28,7 @@ import com.example.myapplication.news.data.NewsArticle
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
@@ -44,16 +46,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.navigation.NavController
 import com.example.myapplication.weather_app.ui.theme.customColor
 import com.example.myapplication.weather_app.ui.theme.darkBlue
 
-
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController) {
@@ -69,8 +74,6 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
         if (selectedCategory.value != "Favorites") {
             viewModel.getNewsByCategory(selectedCategory.value)
         }
-
-
     }
     val displayedNews = if (selectedCategory.value == "Favorites") {
         favoriteNewsList
@@ -78,8 +81,8 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
         newsList
     }
 
-
     val state = rememberPullToRefreshState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -104,22 +107,21 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
         },
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp)
+            .padding(5.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
 
             Row(
-                modifier = Modifier
-                    .padding(8.dp),
+                modifier = Modifier.padding(15.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
 
                 Text(
-                    text = "Latest News"
+                    text = "Latest News",
+                    style = TextStyle(fontSize = 25.sp)
                 )
             }
 
@@ -129,6 +131,7 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
                     .padding(vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+
                 items(categories) { category ->
                     Button(
                         onClick = { selectedCategory.value = category },
@@ -162,7 +165,6 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
     }
 }
 
-
 @Composable
 fun NewsList(
     newsList: List<NewsArticle>,
@@ -194,7 +196,8 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
                     contentDescription = article.title,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(150.dp),
+                        .height(180.dp)
+                        .clip(RoundedCornerShape(16.dp)),
                     contentScale = ContentScale.Crop
                 )
             }
@@ -236,7 +239,6 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
                 ) {
                     Text("Read Full Article")
                 }
-
 
                 IconButton(
                     onClick = {
