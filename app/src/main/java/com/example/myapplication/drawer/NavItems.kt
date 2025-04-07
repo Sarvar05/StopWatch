@@ -20,6 +20,7 @@ data class NavItems (
     val selectedIcon: ImageVector,
     val route:String
 )
+
 val listOfNavItems = listOf<NavItems>(
     NavItems(
         title = "Weather App",

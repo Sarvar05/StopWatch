@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
-    
+
 }
 
 android {
@@ -95,13 +95,14 @@ dependencies {
     implementation("androidx.room:room-ktx:2.5.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.0")
     implementation("io.coil-kt:coil-compose:2.0.0-rc02")
-    implementation ("androidx.webkit:webkit:1.5.0")
-    implementation ("org.jsoup:jsoup:1.15.2")
+    implementation("androidx.webkit:webkit:1.5.0")
+    implementation("org.jsoup:jsoup:1.15.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.8.7")
     implementation("androidx.datastore:datastore-preferences:1.0.0")
-    implementation ("io.coil-kt:coil-compose:2.1.0")
-    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("io.coil-kt:coil-compose:2.1.0")
+    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
+    implementation("androidx.compose.foundation:foundation:1.7.8")
 
 }

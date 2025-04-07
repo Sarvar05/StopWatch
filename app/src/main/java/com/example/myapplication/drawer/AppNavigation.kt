@@ -23,7 +23,9 @@ fun AppNavigation(navController: NavHostController) {
             }
         }
     }
-}@Composable
+}
+
+@Composable
 fun Stopwatch() {
     AndroidView(factory = { context ->
         LayoutInflater.from(context).inflate(R.layout.stop_watch, null)

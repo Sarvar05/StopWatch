@@ -27,7 +27,6 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private val KEY_TIME = longPreferencesKey("time")
         private val KEY_RUNNING = booleanPreferencesKey("running")
-        private val KEY_START_TIME = longPreferencesKey("start_time")
     }
 
     private val dataStore = application.dataStore

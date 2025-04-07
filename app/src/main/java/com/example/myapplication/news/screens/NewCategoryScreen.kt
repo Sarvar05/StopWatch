@@ -24,10 +24,10 @@ fun NewCategoryScreen(category: String, navController: NavController) {
     val viewModel: NewsViewModel = viewModel()
     val newsList = viewModel.newsList.collectAsState(initial = emptyList()).value
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
-
-    LaunchedEffect(category) {
-        viewModel.getNewsByCategory(category)
-    }
+//
+//    LaunchedEffect(category) {
+//        viewModel.getNewsByCategory(category)
+//    }
 
     Column(modifier = Modifier
         .fillMaxSize()

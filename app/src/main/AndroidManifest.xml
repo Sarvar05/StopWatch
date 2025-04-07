@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools" >
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- learn why we need uses - permission -->
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -13,35 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
-        tools:targetApi="31" >
-        <activity
-            android:name=".news.viewmodel.NewsScreen"
-            android:exported="false"
-            android:label="@string/title_activity_news_screen"
-            android:theme="@style/Theme.MyApplication" />
-        <activity
-            android:name=".news.screens.NewsListScreen"
-            android:exported="false"
-            android:label="@string/title_activity_news_list_screen"
-            android:theme="@style/Theme.MyApplication" />
-        <activity
-            android:name=".drawer.DrawerScreen"
-            android:exported="false"
-            android:label="@string/title_activity_drawer_screen"
-            android:theme="@style/Theme.MyApplication" />
-        <activity
-            android:name=".drawer.DrawerScreen"
-            android:exported="false"
-            android:label="@string/title_activity_drawer_screen"
-            android:theme="@style/Theme.MyApplication" />
-        <activity
-            android:name=".weather_app.WeatherScreen"
-            android:exported="false"
-            android:label="@string/title_activity_weather_screen"
-            android:theme="@style/Theme.MyApplication" />
+        tools:targetApi="31">
+
         <activity
             android:name=".MainActivity"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

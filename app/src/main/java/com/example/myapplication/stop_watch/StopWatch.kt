@@ -38,10 +38,6 @@ class StopWatch : AppCompatActivity(R.layout.stop_watch) {
         }
     }
 
-    override fun onStop() {
-        super.onStop()
-
-    }
 
     override fun onResume() {
         super.onResume()

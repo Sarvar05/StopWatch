@@ -4,10 +4,7 @@ import com.google.gson.annotations.SerializedName
 
 data class Main(
     val temp: Float,
-    //TODO type naming rule
-    //TODO what is lint rules?
-//    @SerializedName
-    val temp_min: Float,
-    val temp_max: Float,
+    @SerializedName("temp_min") val tempMin: Float,
+    @SerializedName("temp_max") val tempMax: Float,
     val humidity: Int
 )

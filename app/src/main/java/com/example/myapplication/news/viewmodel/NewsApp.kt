@@ -49,19 +49,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import androidx.navigation.NavController
-import com.example.myapplication.weather_app.ui.theme.customColor
+import com.example.myapplication.R
+import com.example.myapplication.news.data.DatabaseProvider
 import com.example.myapplication.weather_app.ui.theme.darkBlue
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController) {
+fun NewsApp(
+    navController: NavController
+) {
+    val repository = DatabaseProvider.getRepository()
+    val viewModel: NewsViewModel = viewModel(factory = NewsViewModelFactory(repository))
 
     val categories = listOf("All", "Sports", "Business", "Technology", "Health", "Favorites")
     val selectedCategory = remember { mutableStateOf("All") }
@@ -86,7 +92,7 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = customColor)
+            .background(Color.White)
     ) {}
     PullToRefreshBox(
         isRefreshing = isLoading,
@@ -139,8 +145,8 @@ fun NewsApp(viewModel: NewsViewModel = viewModel(), navController: NavController
                         colors = ButtonDefaults.buttonColors(
                             containerColor = if (selectedCategory.value == category) Color(
                                 0xFF003B5C
-                            ) else Color(0xFFA0D2EB),
-                            contentColor = Color.White
+                            ) else Color.White,
+                            contentColor = Color.Black
                         )
                     ) {
                         Text(text = category)
@@ -186,73 +192,80 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
-            .background(color = customColor)
+            .background(Color.White)
     ) {
-        Column(modifier = Modifier.padding(8.dp)) {
-
-            if (article.urlToImage != null) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(180.dp)
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            if (article.urlToImage.isNullOrEmpty()) {
+                Image(
+                    painter = painterResource(R.drawable.no_image),
+                    contentDescription = "Default Image",
+                    modifier = Modifier.fillMaxSize()
+                )
+            } else {
                 Image(
                     painter = rememberAsyncImagePainter(article.urlToImage),
                     contentDescription = article.title,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(180.dp)
-                        .clip(RoundedCornerShape(16.dp)),
+                    modifier = Modifier.fillMaxSize(),
                     contentScale = ContentScale.Crop
                 )
             }
+        }
 
-            Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-            Text(
-                text = article.title,
-                style = MaterialTheme.typography.bodyMedium,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+        Text(
+            text = article.title,
+            style = MaterialTheme.typography.bodyMedium,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
 
-            Spacer(modifier = Modifier.height(4.dp))
+        Spacer(modifier = Modifier.height(4.dp))
 
-            Text(
-                text = article.description ?: "No description",
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis,
-                color = Color.Gray
-            )
+        Text(
+            text = article.description ?: "No description",
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            color = Color.Gray
+        )
 
-            Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(6.dp))
 
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+
+            Button(
+                onClick = {
+                    val encodedUrl = Uri.encode(article.url)
+                    navController.navigate("article_screen/$encodedUrl")
+                },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = darkBlue,
+                    contentColor = Color.White
+                )
             ) {
+                Text("Read Full Article")
+            }
 
-                Button(
-                    onClick = {
-                        val encodedUrl = Uri.encode(article.url)
-                        navController.navigate("article_screen/$encodedUrl")
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = darkBlue,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text("Read Full Article")
+            IconButton(
+                onClick = {
+                    viewModel.toggleFavorite(article)
+                    isFavorite = !isFavorite
                 }
-
-                IconButton(
-                    onClick = {
-                        viewModel.toggleFavorite(article)
-                        isFavorite = !isFavorite
-                    }
-                ) {
-                    Icon(
-                        imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                        contentDescription = "Favorite",
-                        tint = if (isFavorite) Color.Red else Color.Gray,
-                        modifier = Modifier.size(28.dp)
-                    )
-                }
+            ) {
+                Icon(
+                    imageVector = if (isFavorite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                    contentDescription = "Favorite",
+                    tint = if (isFavorite) darkBlue else Color.Gray,
+                    modifier = Modifier.size(28.dp)
+                )
             }
         }
     }

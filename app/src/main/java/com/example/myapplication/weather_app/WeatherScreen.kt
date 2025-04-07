@@ -48,7 +48,7 @@ fun WeatherScreen() {
     fun fetchWeather() {
         coroutineScope.launch {
             try {
-                val response = RetrofitInstance.api.getWeather("Tashkent", API_KEY)
+                val response = RetrofitInstance.api.getWeather("Tashkent", API_KEY_WEATHER)
 
                 temperature = response.main.temp
                 humidity = response.main.humidity
