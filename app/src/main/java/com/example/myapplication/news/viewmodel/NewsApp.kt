@@ -2,6 +2,7 @@ package com.example.myapplication.news.viewmodel
 
 import android.net.Uri
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -256,8 +257,8 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
 
             IconButton(
                 onClick = {
+                    Log.d("Favorite", "Icon button clicked for article: ${article.title}")
                     viewModel.toggleFavorite(article)
-                    isFavorite = !isFavorite
                 }
             ) {
                 Icon(

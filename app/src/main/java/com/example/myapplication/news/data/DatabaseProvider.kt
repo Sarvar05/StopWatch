@@ -10,20 +10,14 @@ object DatabaseProvider {
 
     fun init(context: Context) {
         database = Room.databaseBuilder(
-            context.applicationContext,
+            context,
             AppDatabase::class.java,
             "news_database"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(MIGRATION_2_3)
             .build()
-
         newsRepository = NewsRepository(database.newsDao(), RetrofitInstance.api)
     }
-
-
-//    fun getNewsDao(): NewsDao {
-//        return database.newsDao()
-//    }
 
     fun getRepository(): NewsRepository {
         return newsRepository

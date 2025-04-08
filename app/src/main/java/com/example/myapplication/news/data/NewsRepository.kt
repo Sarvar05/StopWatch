@@ -1,6 +1,4 @@
 package com.example.myapplication.news.data
-
-import android.util.Log
 import com.example.myapplication.news.service.NewsApiService
 
 
@@ -16,21 +14,18 @@ class NewsRepository(
     }
 
     suspend fun getFavoriteArticles(): List<NewsArticle> {
-        val favorites = newsDao.getFavoriteNews()
-        Log.d("Favorite", "Loaded ${favorites.size} favorites from DB")
-        return favorites
+        return newsDao.getFavoriteNews()
     }
-
 
     suspend fun insertNews(newsList: List<NewsArticle>) {
-        newsDao.insertNews(newsList)
-        Log.d("NewsRepository", "Inserted ${newsList.size} articles into the database")
+        val uniqueArticles = newsList.distinctBy { it.url }
+        uniqueArticles.forEach { article ->
+            val existingArticle = newsDao.getArticleByUrl(article.url.toString())
+            if (existingArticle == null) {
+                newsDao.insertNews(listOf(article))
+            }
+        }
     }
-
-
-//    suspend fun updateArticle(article: NewsArticle) {
-//        newsDao.updateArticle(article)
-//    }
 
     suspend fun fetchNewsFromApi(category: String): NewsResponse {
         return if (category == "All") {
@@ -40,10 +35,15 @@ class NewsRepository(
         }
     }
 
-    suspend fun updateArticleFavoriteStatus(id: Int, isFavorite: Boolean) {
-        Log.d("Favorite", "Updating article $id favorite to $isFavorite")
-        newsDao.setFavoriteStatus(id, isFavorite)
+    suspend fun updateArticleFavoriteStatus(url: String, isFavorite: Boolean) {
+        newsDao.setFavoriteStatus(url, isFavorite)
     }
 
-
+    suspend fun refreshNews(articles: List<NewsArticle>) {
+        if (articles.isNotEmpty()) {
+            val category = articles.first().category ?: "All"
+            newsDao.deleteNewsByCategory(category)
+            newsDao.insertNews(articles)
+        }
+    }
 }
