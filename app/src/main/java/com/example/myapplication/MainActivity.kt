@@ -9,6 +9,7 @@ import com.example.myapplication.news.data.DatabaseProvider
 import com.example.myapplication.news.navigation.SetupNav
 import com.example.myapplication.news.viewmodel.NewsApp
 import com.example.myapplication.news.viewmodel.NewsViewModel
+import com.example.myapplication.weather_app.ui.theme.MyApplicationTheme
 import dagger.hilt.android.HiltAndroidApp
 
 @HiltAndroidApp
@@ -18,7 +19,9 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             DatabaseProvider.init(this)
-            SetupNav()
+            MyApplicationTheme {
+                SetupNav()
+            }
         }
     }
 }

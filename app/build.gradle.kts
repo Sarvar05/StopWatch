@@ -104,5 +104,6 @@ dependencies {
     implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
     implementation("androidx.compose.foundation:foundation:1.7.8")
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
 
 }

@@ -1,5 +1,6 @@
 package com.example.myapplication.news.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.launch
 import com.example.myapplication.news.data.NewsArticle
@@ -54,23 +55,40 @@ class NewsViewModel(
             _isLoading.value = true
             try {
                 val response = if (category == "All") {
-                    RetrofitInstance.api.getTopHeadlines("us", API_KEY)
+                    RetrofitInstance.api.getTopHeadlines(
+                        country = "us",
+                        apiKey = "922359aac397424a9c3e73a984948bce"
+                    )
                 } else {
-                    RetrofitInstance.api.getNewsByCategory(category.lowercase(), "us", API_KEY)
+                    RetrofitInstance.api.getNewsByCategory(
+                        category = category.lowercase(),
+                        country = "us",
+                        apiKey = "922359aac397424a9c3e73a984948bce"
+                    )
                 }
+
                 if (response.status == "ok") {
-                    _newsList.value = response.articles
-                    insertNewsWithErrorHandling(response.articles.map { it.copy(category = category) })
+                    val favorites = repository.getFavoriteArticles()
+                    val updatedArticles = response.articles.map { article ->
+                        article.copy(
+                            category = category,
+                            isFavorite = favorites.any { it.title == article.title }
+                        )
+                    }
+                    _newsList.value = updatedArticles
+                    insertNewsWithErrorHandling(updatedArticles)
                 } else {
                     loadCachedNews(category)
                 }
             } catch (e: Exception) {
+                Log.e("NewsViewModel", "Error fetching news: ${e.message}")
                 loadCachedNews(category)
             } finally {
                 _isLoading.value = false
             }
         }
     }
+
 
     private fun loadCachedNews(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -89,7 +107,10 @@ class NewsViewModel(
     fun toggleFavorite(article: NewsArticle) {
         viewModelScope.launch(Dispatchers.IO) {
             val updatedArticle = article.copy(isFavorite = !article.isFavorite)
-            repository.updateArticleFavoriteStatus(updatedArticle.url.toString(), updatedArticle.isFavorite)
+            repository.updateArticleFavoriteStatus(
+                updatedArticle.url.toString(),
+                updatedArticle.isFavorite
+            )
             loadFavorites()
         }
     }
