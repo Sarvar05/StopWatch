@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.launch
 import com.example.myapplication.news.data.NewsArticle
 import androidx.lifecycle.viewModelScope
-import com.example.myapplication.news.data.API_KEY
 import com.example.myapplication.news.data.NewsRepository
 import com.example.myapplication.news.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
@@ -112,6 +111,7 @@ class NewsViewModel(
                 updatedArticle.isFavorite
             )
             loadFavorites()
+
         }
     }
 

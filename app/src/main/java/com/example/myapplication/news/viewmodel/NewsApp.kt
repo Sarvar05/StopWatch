@@ -4,6 +4,7 @@ import android.net.Uri
 import android.os.Build
 import android.util.Log
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -49,6 +50,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -73,7 +75,7 @@ fun NewsApp(
     val viewModel: NewsViewModel = viewModel(factory = NewsViewModelFactory(repository))
 
     val categories = listOf("All", "Sports", "Business", "Technology", "Health", "Favorites")
-    val selectedCategory = remember { mutableStateOf("All") }
+    val selectedCategory = rememberSaveable { mutableStateOf("All") }
 
     val newsList by viewModel.newsList.collectAsState(initial = emptyList())
     val favoriteNewsList by viewModel.favoriteNewsList.collectAsState(initial = emptyList())
@@ -174,7 +176,7 @@ fun NewsApp(
                 NewsList(
                     newsList = displayedNews,
                     navController = navController,
-                    viewModel = viewModel
+                    viewModel = viewModel,
                 )
             }
         }
@@ -185,7 +187,8 @@ fun NewsApp(
 fun NewsList(
     newsList: List<NewsArticle>,
     navController: NavController,
-    viewModel: NewsViewModel
+    viewModel: NewsViewModel,
+
 ) {
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         items(newsList) { article ->
@@ -202,7 +205,7 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
     fun GlideImage(url: String?, modifier: Modifier = Modifier) {
         AndroidView(
             factory = { context ->
-                ImageView(context).apply {
+                ImageView(context).apply {scaleType
                     scaleType = ImageView.ScaleType.CENTER_CROP
                 }
             },
@@ -210,6 +213,7 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
             update = { imageView ->
                 Glide.with(imageView.context)
                     .load(url)
+                    .error(R.drawable.no_image1)
                     .into(imageView)
             }
         )
@@ -243,10 +247,11 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
             ) {
                 if (article.urlToImage.isNullOrEmpty()) {
                     Image(
-                        painter = painterResource(R.drawable.no_image),
-                        contentDescription = "Default Image",
-                        modifier = Modifier.fillMaxSize(),
+                        painter = painterResource(R.drawable.no_image1),
+                        contentDescription = "Your image",
+                        modifier = Modifier
                     )
+
                 } else {
                     GlideImage(
                         url = article.urlToImage,
@@ -297,6 +302,7 @@ fun NewsItem(article: NewsArticle, navController: NavController, viewModel: News
                     onClick = {
                         Log.d("Favorite", "Icon button clicked for article: ${article.title}")
                         viewModel.toggleFavorite(article)
+
                     }
                 ) {
                     Icon(
