@@ -1,6 +1,7 @@
 package com.example.myapplication.news.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.launch
 import com.example.myapplication.news.data.NewsArticle
@@ -10,6 +11,7 @@ import com.example.myapplication.news.service.RetrofitInstance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 
 class NewsViewModel(
     private val repository: NewsRepository
@@ -23,6 +25,9 @@ class NewsViewModel(
 
     private val _favoriteNewsList = MutableStateFlow<List<NewsArticle>>(emptyList())
     val favoriteNewsList: StateFlow<List<NewsArticle>> = _favoriteNewsList
+
+    private val _toastMessage = MutableLiveData<String?>()
+
 
     init {
         loadNews("All")
@@ -43,7 +48,10 @@ class NewsViewModel(
                 }
             } catch (e: Exception) {
                 loadCachedNews(category)
-            } finally {
+                _toastMessage.postValue("error_with_article")
+
+
+        } finally {
                 _isLoading.value = false
             }
         }
@@ -107,11 +115,17 @@ class NewsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             val updatedArticle = article.copy(isFavorite = !article.isFavorite)
             repository.updateArticleFavoriteStatus(
-                updatedArticle.url.toString(),
+                updatedArticle.url,
                 updatedArticle.isFavorite
             )
-            loadFavorites()
 
+            _newsList.update { currentList ->
+                currentList.map {
+                    if (it.url == updatedArticle.url) updatedArticle else it
+                }
+            }
+
+            loadFavorites()
         }
     }
 
