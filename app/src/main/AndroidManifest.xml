@@ -15,7 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
         tools:targetApi="31">
-
+        <activity
+            android:name=".stop_watch.StopWatchSc"
+            android:exported="false"
+            android:label="@string/title_activity_stop_watch_sc"
+            android:theme="@style/Theme.MyApplication" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

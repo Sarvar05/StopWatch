@@ -22,7 +22,6 @@ import java.util.Locale
 
 private val Context.dataStore by preferencesDataStore(name = "stopwatch_prefs")
 
-
 class WatchViewModel(application: Application) : AndroidViewModel(application) {
     companion object {
         private val KEY_TIME = longPreferencesKey("time")
@@ -67,14 +66,13 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
         val hours = seconds / 3600
         val minutes = (seconds % 3600) / 60
         val sec = seconds % 60
-        return String.Companion.format(Locale.US, "%02d:%02d:%02d", hours, minutes, sec)
+        return String.format(Locale.US, "%02d:%02d:%02d", hours, minutes, sec)
     }
 
     fun resetTimer() {
         job?.cancel()
         _seconds.value = 0L
         startTime = SystemClock.elapsedRealtime()
-
         saveState()
     }
 

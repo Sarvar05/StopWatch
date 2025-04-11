@@ -7,38 +7,36 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 
-
 enum class Screens(val route: String) {
     WeatherScreen("weather_screen"),
-    Stopwatch("stop_watch"),
+    Stopwatch("stop_watch "),
     NewsApp("news_app")
 }
 
-data class NavItems (
-    val title:String,
+data class NavItems(
+    val title: String,
     val unselectedIcon: ImageVector,
     val selectedIcon: ImageVector,
-    val route:String
+    val route: String
 )
 
-val listOfNavItems = listOf<NavItems>(
+val listOfNavItems = listOf(
     NavItems(
-        title = "Weather App",
-        unselectedIcon= Icons.Outlined.Home,
+        title = "Weather",
+        unselectedIcon = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
         route = Screens.WeatherScreen.route
     ),
     NavItems(
-        title = "Stop watch",
-        unselectedIcon= Icons.Outlined.MailOutline,
+        title = "Stopwatch",
+        unselectedIcon = Icons.Outlined.MailOutline,
         selectedIcon = Icons.Filled.Email,
         route = Screens.Stopwatch.route
     ),
     NavItems(
-        title = "News App",
-        unselectedIcon= Icons.Outlined.MailOutline,
+        title = "News",
+        unselectedIcon = Icons.Outlined.MailOutline,
         selectedIcon = Icons.Filled.Email,
         route = Screens.NewsApp.route
     )
-
 )

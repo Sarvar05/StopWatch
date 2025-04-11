@@ -21,4 +21,5 @@
     <string name="title_activity_news_list_screen">NewsListScreen</string>
     <string name="title_activity_news_screen">NewsScreen</string>
     <string name="error_with_article">Не удалось загрузить сайт!</string>
+    <string name="title_activity_stop_watch_sc">StopWatchSc</string>
 </resources>

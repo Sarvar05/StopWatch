@@ -121,17 +121,6 @@ fun NewsApp(
                 .fillMaxSize()
         ) {
 
-            Row(
-                modifier = Modifier.padding(15.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-
-                Text(
-                    text = "News",
-                    style = TextStyle(fontSize = 25.sp),
-                    color = MaterialTheme.colorScheme.onBackground
-                )
-            }
 
             LazyRow(
                 modifier = Modifier

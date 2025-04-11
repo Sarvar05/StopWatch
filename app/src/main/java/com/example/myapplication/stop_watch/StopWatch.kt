@@ -1,6 +1,9 @@
 package com.example.myapplication.stop_watch
 
+import android.os.Build
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -13,10 +16,14 @@ class StopWatch : AppCompatActivity(R.layout.stop_watch) {
     private lateinit var viewModel: WatchViewModel
     private var isPaused = true
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = StopWatchBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setContent {
+            StopWatchScreen(viewModel)
+        }
 
         viewModel = ViewModelProvider(this)[WatchViewModel::class.java]
 
@@ -61,7 +68,7 @@ class StopWatch : AppCompatActivity(R.layout.stop_watch) {
     }
 
     private fun updatePlayPauseIcon() {
-        val iconRes = if (isPaused) R.drawable.play_button else R.drawable.pause_button
+        val iconRes = if (isPaused) R.drawable.play else R.drawable.pause
         binding.playPauseButton.setImageResource(iconRes)
     }
 }
