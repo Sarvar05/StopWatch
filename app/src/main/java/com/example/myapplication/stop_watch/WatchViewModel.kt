@@ -29,12 +29,15 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val dataStore = application.dataStore
+
     private val _seconds = MutableStateFlow(0L)
     val seconds: StateFlow<Long> = _seconds.asStateFlow()
 
+    private val _isRunning = MutableStateFlow(false)
+    val isRunning: StateFlow<Boolean> = _isRunning.asStateFlow()
+
     private var job: Job? = null
     private var startTime = 0L
-    var isRunning = false
 
     init {
         viewModelScope.launch {
@@ -43,7 +46,7 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
             val wasRunning = prefs[KEY_RUNNING] == true
 
             _seconds.value = savedTime
-            isRunning = wasRunning
+            _isRunning.value = wasRunning
 
             if (wasRunning) {
                 startTimer(savedTime)
@@ -78,14 +81,14 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
 
     fun stopTimer() {
         job?.cancel()
-        isRunning = false
+        _isRunning.value = false
         saveState()
     }
 
     fun resumeTimer() {
-        if (!isRunning) {
+        if (!_isRunning.value) {
             startTimer(_seconds.value)
-            isRunning = true
+            _isRunning.value = true
         }
     }
 
@@ -93,7 +96,7 @@ class WatchViewModel(application: Application) : AndroidViewModel(application) {
         viewModelScope.launch {
             dataStore.edit { prefs ->
                 prefs[KEY_TIME] = _seconds.value
-                prefs[KEY_RUNNING] = isRunning
+                prefs[KEY_RUNNING] = _isRunning.value
             }
         }
     }

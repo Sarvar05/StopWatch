@@ -9,16 +9,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapplication.R
 
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun StopWatchScreen(viewModel: WatchViewModel) {
     val seconds by viewModel.seconds.collectAsState()
+    val isRunning by viewModel.isRunning.collectAsState()
     val formattedTime = viewModel.formatTime(seconds)
 
     Box(
@@ -42,7 +41,6 @@ fun StopWatchScreen(viewModel: WatchViewModel) {
             Box(
                 modifier = Modifier.size(200.dp)
             ) {
-
                 Text(
                     text = formattedTime,
                     color = Color.Black,
@@ -55,37 +53,29 @@ fun StopWatchScreen(viewModel: WatchViewModel) {
                 modifier = Modifier.padding(top = 32.dp),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                IconButton(
+                Button(
                     onClick = {
                         viewModel.resetTimer()
                         viewModel.stopTimer()
                     },
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.clear_button),
-                        contentDescription = "Clear",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    Text("Reset")
                 }
 
                 Spacer(modifier = Modifier.width(40.dp))
 
-                IconButton(
+                Button(
                     onClick = {
-                        if (viewModel.isRunning) {
+                        if (isRunning) {
                             viewModel.stopTimer()
                         } else {
                             viewModel.resumeTimer()
                         }
                     },
-                    modifier = Modifier.size(80.dp)
+                    modifier = Modifier.size(width = 100.dp, height = 50.dp)
                 ) {
-                    Icon(
-                        painter = painterResource(id = if (viewModel.isRunning) R.drawable.pause_button else R.drawable.play_button),
-                        contentDescription = if (viewModel.isRunning) "Pause" else "Play",
-                        modifier = Modifier.fillMaxSize()
-                    )
+                    Text(if (isRunning) "Pause" else "Play")
                 }
             }
         }
