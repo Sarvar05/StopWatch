@@ -6,7 +6,8 @@ import okhttp3.OkHttpClient
 import java.util.concurrent.TimeUnit
 
 
-object RetrofitInstance {
+object
+RetrofitInstance {
     private const val BASE_URL = "https://newsapi.org/v2/"
 
     private val okHttpClient = OkHttpClient.Builder()

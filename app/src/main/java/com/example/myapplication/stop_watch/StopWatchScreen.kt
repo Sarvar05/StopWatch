@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -38,15 +39,22 @@ fun StopWatchScreen(viewModel: WatchViewModel) {
                 modifier = Modifier.padding(bottom = 36.dp)
             )
 
-            Box(
-                modifier = Modifier.size(200.dp)
+            Card(
+                modifier = Modifier.size(220.dp),
+                shape = RoundedCornerShape(24.dp),
+                elevation = CardDefaults.cardElevation(12.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
             ) {
-                Text(
-                    text = formattedTime,
-                    color = Color.Black,
-                    fontSize = 44.sp,
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = formattedTime,
+                        color = Color.Black,
+                        fontSize = 44.sp
+                    )
+                }
             }
 
             Row(

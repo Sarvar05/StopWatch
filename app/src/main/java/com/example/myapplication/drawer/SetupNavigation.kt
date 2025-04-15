@@ -63,7 +63,7 @@ fun SetupNavigation() {
     val scope = rememberCoroutineScope()
     val navController = rememberNavController()
     val viewModel: WatchViewModel = viewModel()
-    var currentTitle by remember { mutableStateOf("App Title") }
+    var currentTitle by remember { mutableStateOf("App") }
 
     ModalNavigationDrawer(
         drawerContent = {
@@ -83,7 +83,7 @@ fun SetupNavigation() {
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
-                                painter = painterResource(id = R.drawable.img),
+                                painter = painterResource(id = R.drawable.ic_menu),
                                 contentDescription = null,
                                 modifier = Modifier
                                     .size(60.dp)
@@ -93,7 +93,7 @@ fun SetupNavigation() {
                             )
                             Spacer(modifier = Modifier.width(16.dp))
                             Text(
-                                text = "Your Name",
+                                text = "App",
                                 style = MaterialTheme.typography.bodyLarge.copy(
                                     fontWeight = FontWeight.Normal,
                                     color = Color.White

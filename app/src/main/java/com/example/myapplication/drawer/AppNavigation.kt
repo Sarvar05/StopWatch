@@ -1,18 +1,19 @@
 package com.example.myapplication.drawer
+
 import android.os.Build
-import android.view.LayoutInflater
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.myapplication.R
+import androidx.navigation.navArgument
+import com.example.myapplication.news.screens.ArticleScreen
+import com.example.myapplication.news.screens.NewCategoryScreen
 import com.example.myapplication.news.viewmodel.NewsApp
-import com.example.myapplication.stop_watch.StopWatch
 import com.example.myapplication.stop_watch.StopWatchScreen
 import com.example.myapplication.stop_watch.WatchViewModel
 import com.example.myapplication.weather_app.WeatherScreen
@@ -37,6 +38,22 @@ fun AppNavigation(
                     Screens.NewsApp -> NewsApp(navController)
                 }
             }
+        }
+
+        composable(
+            "category_screen/{category}",
+            arguments = listOf(navArgument("category") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val category = backStackEntry.arguments?.getString("category") ?: ""
+            NewCategoryScreen(category = category, navController = navController)
+        }
+
+        composable(
+            "article_screen/{articleUrl}",
+            arguments = listOf(navArgument("articleUrl") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val articleUrl = backStackEntry.arguments?.getString("articleUrl") ?: ""
+            ArticleScreen(articleUrl = articleUrl)
         }
     }
 }

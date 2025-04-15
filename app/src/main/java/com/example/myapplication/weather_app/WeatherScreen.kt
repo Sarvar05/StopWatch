@@ -1,5 +1,7 @@
 package com.example.myapplication.weather_app
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -9,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -32,6 +36,7 @@ import java.text.SimpleDateFormat
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.myapplication.R
 import java.util.*
@@ -72,6 +77,8 @@ fun WeatherScreen() {
         fetchWeather()
     }
 
+    val iconRes = getWeatherIcon(description)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -84,9 +91,30 @@ fun WeatherScreen() {
             fontSize = 24.sp,
             color = Color.DarkGray
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "$temperature°C", fontSize = 48.sp, fontWeight = FontWeight.Bold)
-        Text(text = description, fontSize = 20.sp, color = Color.Gray)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Image(
+            painter = painterResource(id = iconRes),
+            contentDescription = null,
+            modifier = Modifier
+                .size(120.dp)
+                .padding(8.dp)
+        )
+
+        Text(
+            text = "$temperature°C",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Medium,
+            color = Color.Black
+        )
+
+        Text(
+            text = description,
+            fontSize = 20.sp,
+            color = Color.Gray
+        )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         WeatherDetailsCard(windSpeed, humidity)
@@ -113,10 +141,15 @@ fun WeatherDetailsCard(wind: Float, humidity: Int) {
         modifier = Modifier.fillMaxWidth()
     ) {
         Row(
-            modifier = Modifier.padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = stringResource(id = R.string.wind),
                     fontSize = 14.sp,
@@ -124,7 +157,13 @@ fun WeatherDetailsCard(wind: Float, humidity: Int) {
                 )
                 Text(text = "$wind м/с", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+
+            Spacer(modifier = Modifier.width(16.dp))
+
+            Column(
+                modifier = Modifier.weight(1f),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Text(
                     text = stringResource(id = R.string.humidity),
                     fontSize = 14.sp,
@@ -133,6 +172,16 @@ fun WeatherDetailsCard(wind: Float, humidity: Int) {
                 Text(text = "$humidity%", fontSize = 18.sp, fontWeight = FontWeight.Bold)
             }
         }
+    }
+}
+
+@DrawableRes
+fun getWeatherIcon(description: String): Int {
+    return when {
+        description.contains("clear", ignoreCase = true) -> R.drawable.sun_img
+        description.contains("cloud", ignoreCase = true) -> R.drawable.cloudy_img
+        description.contains("rain", ignoreCase = true) -> R.drawable.rain_img
+        else -> R.drawable.sun_img
     }
 }
 

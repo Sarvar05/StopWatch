@@ -12,7 +12,7 @@
     <string name="title_activity_drawer_screen">DrawerScreen</string>
     <string name="loading">Загрузка...</string>
     <string name="unknown">Неизвестно</string>
-    <string name="updated">Обновлено</string>
+    <string name="updated">Обновить</string>
     <string name="weather_title">Погода в Ташкенте</string>
     <string name="update_button">Обновить</string>
     <string name="wind">Ветер</string>

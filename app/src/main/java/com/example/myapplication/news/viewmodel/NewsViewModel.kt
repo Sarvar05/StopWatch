@@ -8,6 +8,7 @@ import com.example.myapplication.news.data.NewsArticle
 import androidx.lifecycle.viewModelScope
 import com.example.myapplication.news.data.NewsRepository
 import com.example.myapplication.news.service.RetrofitInstance
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -36,9 +37,14 @@ class NewsViewModel(
     }
 
     fun loadNews(category: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        val exp = CoroutineExceptionHandler { _, exception ->
+            loadCachedNews(category)
+            _toastMessage.postValue("error_with_article")
+            _isLoading.value = false
+
+        }
+        viewModelScope.launch(Dispatchers.IO + exp) {
             _isLoading.value = true
-            try {
                 val newsResponse = repository.fetchNewsFromApi(category)
                 if (newsResponse.status == "ok") {
                     repository.refreshNews(newsResponse.articles.map { it.copy(category = category) })
@@ -46,14 +52,9 @@ class NewsViewModel(
                 } else {
                     loadCachedNews(category)
                 }
-            } catch (e: Exception) {
-                loadCachedNews(category)
-                _toastMessage.postValue("error_with_article")
 
-
-        } finally {
                 _isLoading.value = false
-            }
+
         }
     }
 
@@ -118,7 +119,6 @@ class NewsViewModel(
                 updatedArticle.url,
                 updatedArticle.isFavorite
             )
-
             _newsList.update { currentList ->
                 currentList.map {
                     if (it.url == updatedArticle.url) updatedArticle else it

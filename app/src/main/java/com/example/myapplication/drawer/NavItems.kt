@@ -7,6 +7,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 
+
 enum class Screens(val route: String) {
     WeatherScreen("weather_screen"),
     Stopwatch("stop_watch "),
