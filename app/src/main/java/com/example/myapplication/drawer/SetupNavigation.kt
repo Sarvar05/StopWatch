@@ -49,8 +49,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.rememberNavController
 import com.example.myapplication.R
-import com.example.myapplication.stop_watch.WatchViewModel
-import com.example.myapplication.weather_app.ui.theme.Purple40
+import com.example.timer.presentation.WatchViewModel
+import com.example.weather.presentation.ui.theme.darkBlue
 import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -76,7 +76,7 @@ fun SetupNavigation() {
                         modifier = Modifier
                             .height(100.dp)
                             .fillMaxWidth()
-                            .background(color = Purple40)
+                            .background(color = darkBlue)
                     ) {
                         Row(
                             modifier = Modifier.padding(16.dp),
@@ -156,7 +156,11 @@ fun SetupNavigation() {
                 )
             },
             content = { paddingValues ->
-                AppNavigation(navController = navController, paddingValues = paddingValues, viewModel=viewModel)
+                AppNavigation(
+                    navController = navController,
+                    paddingValues = paddingValues,
+                    viewModel = viewModel
+                )
             }
         )
     }

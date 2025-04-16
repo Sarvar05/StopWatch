@@ -1,0 +1,141 @@
+package com.example.news.presentation
+
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.news.data.NewsArticle
+import com.example.news.data.NewsRepository
+import com.example.news.data.RetrofitInstance
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class NewsViewModel(
+    private val repository: NewsRepository
+) : ViewModel() {
+
+    private val _newsList = MutableStateFlow<List<NewsArticle>>(emptyList())
+    val newsList: StateFlow<List<NewsArticle>> = _newsList
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _favoriteNewsList = MutableStateFlow<List<NewsArticle>>(emptyList())
+    val favoriteNewsList: StateFlow<List<NewsArticle>> = _favoriteNewsList
+
+    private val _toastMessage = MutableLiveData<String?>()
+
+
+    init {
+        loadNews("All")
+        getNewsByCategory("All")
+        loadFavorites()
+    }
+
+    fun loadNews(category: String) {
+        val exp = CoroutineExceptionHandler { _, exception ->
+            loadCachedNews(category)
+            _toastMessage.postValue("error_with_article")
+            _isLoading.value = false
+
+        }
+        viewModelScope.launch(Dispatchers.IO + exp) {
+            _isLoading.value = true
+            val newsResponse = repository.fetchNewsFromApi(category)
+            if (newsResponse.status == "ok") {
+                repository.refreshNews(newsResponse.articles.map { it.copy(category = category) })
+                _newsList.value = newsResponse.articles
+            } else {
+                loadCachedNews(category)
+            }
+
+            _isLoading.value = false
+
+        }
+    }
+
+    fun getNewsByCategory(category: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            _isLoading.value = true
+            try {
+                val response = if (category == "All") {
+                    RetrofitInstance.api.getTopHeadlines(
+                        country = "us",
+                        apiKey = "922359aac397424a9c3e73a984948bce"
+                    )
+                } else {
+                    RetrofitInstance.api.getNewsByCategory(
+                        category = category.lowercase(),
+                        country = "us",
+                        apiKey = "922359aac397424a9c3e73a984948bce"
+                    )
+                }
+
+                if (response.status == "ok") {
+                    val favorites = repository.getFavoriteArticles()
+                    val updatedArticles = response.articles.map { article ->
+                        article.copy(
+                            category = category,
+                            isFavorite = favorites.any { it.title == article.title }
+                        )
+                    }
+                    _newsList.value = updatedArticles
+                    insertNewsWithErrorHandling(updatedArticles)
+                } else {
+                    loadCachedNews(category)
+                }
+            } catch (e: Exception) {
+                Log.e("NewsViewModel", "Error fetching news: ${e.message}")
+                loadCachedNews(category)
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+
+    private fun loadCachedNews(category: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val cachedNews = repository.getNewsByCategory(category)
+            _newsList.value = cachedNews
+        }
+    }
+
+    private fun loadFavorites() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val favoriteArticles = repository.getFavoriteArticles()
+            _favoriteNewsList.value = favoriteArticles
+        }
+    }
+
+    fun toggleFavorite(article: NewsArticle) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updatedArticle = article.copy(isFavorite = !article.isFavorite)
+            repository.updateArticleFavoriteStatus(
+                updatedArticle.url,
+                updatedArticle.isFavorite
+            )
+            _newsList.update { currentList ->
+                currentList.map {
+                    if (it.url == updatedArticle.url) updatedArticle else it
+                }
+            }
+
+            loadFavorites()
+        }
+    }
+
+    suspend fun insertNewsWithErrorHandling(newsList: List<NewsArticle>) {
+        try {
+            if (newsList.isNotEmpty()) {
+                repository.insertNews(newsList)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+}

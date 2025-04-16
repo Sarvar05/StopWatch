@@ -11,12 +11,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.myapplication.news.screens.ArticleScreen
-import com.example.myapplication.news.screens.NewCategoryScreen
-import com.example.myapplication.news.viewmodel.NewsApp
-import com.example.myapplication.stop_watch.StopWatchScreen
-import com.example.myapplication.stop_watch.WatchViewModel
-import com.example.myapplication.weather_app.WeatherScreen
+import com.example.news.presentation.ArticleScreen
+import com.example.news.presentation.NewCategoryScreen
+import com.example.news.presentation.NewsApp
+import com.example.timer.presentation.StopWatchScreen
+import com.example.timer.presentation.WatchViewModel
+import com.example.weather.presentation.WeatherScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

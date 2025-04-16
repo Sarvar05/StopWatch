@@ -18,9 +18,8 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-
 rootProject.name = "My Application"
 include(":app")
-include(":news-data")
-include(":weather-data")
-
+include(":news")
+include(":weather")
+include(":timer")
