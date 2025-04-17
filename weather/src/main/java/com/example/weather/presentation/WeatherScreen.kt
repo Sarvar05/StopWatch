@@ -37,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.weather.R
-import com.example.weather.data.RetrofitInstance
+import com.example.weather.domain.RetrofitInstance
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date

@@ -11,8 +11,8 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.news.presentation.ArticleScreen
-import com.example.news.presentation.NewCategoryScreen
+import com.example.news.presentation.article.ArticleScreen
+import com.example.news.presentation.article.NewCategoryScreen
 import com.example.news.presentation.NewsApp
 import com.example.timer.presentation.StopWatchScreen
 import com.example.timer.presentation.WatchViewModel

@@ -1,6 +1,6 @@
 package com.example.weather.presentation
 
-import com.example.weather.domain.WeatherResponse
+import com.example.weather.data.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 

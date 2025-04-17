@@ -1,4 +1,4 @@
-package com.example.news.presentation
+package com.example.news.presentation.article
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

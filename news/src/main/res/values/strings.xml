@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="answer_from_api">Ответ от сервера не содержит новостей</string>
+    <resources>
+        <string name="error_bad_request">Invalid request (400)</string>
+        <string name="error_unauthorized">Unauthorized. Check API key (401)</string>
+        <string name="error_forbidden">Access Denied (403)</string>
+        <string name="error_not_found">No news found (404)</string>
+        <string name="error_server">Server error (500). Try again later</string>
+        <string name="error_generic">HTTP error: %1$d</string>
+    </resources>
+
+</resources>

@@ -1,4 +1,4 @@
-package com.example.news.presentation
+package com.example.news.presentation.article
 
 import android.annotation.SuppressLint
 import android.webkit.WebView
@@ -11,6 +11,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
 
 
+@SuppressLint("SetJavaScriptEnabled")
 @Composable
 fun ArticleScreen(articleUrl: String) {
     val context = LocalContext.current

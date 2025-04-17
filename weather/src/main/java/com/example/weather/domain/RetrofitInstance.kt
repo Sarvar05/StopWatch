@@ -1,4 +1,4 @@
-package com.example.weather.data
+package com.example.weather.domain
 
 import com.example.weather.presentation.WeatherService
 import okhttp3.Interceptor
@@ -6,9 +6,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import kotlin.getValue
-import kotlin.jvm.java
-
 
 object RetrofitInstance {
 

@@ -7,7 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.weather.data.RetrofitInstance
+import com.example.weather.domain.RetrofitInstance
 import kotlinx.coroutines.launch
 
 class WeatherViewModel : ViewModel() {

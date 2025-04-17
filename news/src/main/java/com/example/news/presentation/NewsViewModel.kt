@@ -1,18 +1,20 @@
 package com.example.news.presentation
 
-import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.news.data.NewsArticle
 import com.example.news.data.NewsRepository
 import com.example.news.data.RetrofitInstance
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import retrofit2.HttpException
+import java.io.IOException
 
 class NewsViewModel(
     private val repository: NewsRepository
@@ -28,7 +30,7 @@ class NewsViewModel(
     val favoriteNewsList: StateFlow<List<NewsArticle>> = _favoriteNewsList
 
     private val _toastMessage = MutableLiveData<String?>()
-
+    val toastMessage: LiveData<String?> = _toastMessage
 
     init {
         loadNews("All")
@@ -37,24 +39,49 @@ class NewsViewModel(
     }
 
     fun loadNews(category: String) {
-        val exp = CoroutineExceptionHandler { _, exception ->
-            loadCachedNews(category)
-            _toastMessage.postValue("error_with_article")
-            _isLoading.value = false
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                _isLoading.emit(true)
 
-        }
-        viewModelScope.launch(Dispatchers.IO + exp) {
-            _isLoading.value = true
-            val newsResponse = repository.fetchNewsFromApi(category)
-            if (newsResponse.status == "ok") {
-                repository.refreshNews(newsResponse.articles.map { it.copy(category = category) })
-                _newsList.value = newsResponse.articles
-            } else {
+                val newsResponse = repository.fetchNewsFromApi(category)
+
+                if (newsResponse.status.lowercase() == "ok" && newsResponse.articles.isNotEmpty()) {
+                    val updatedArticles = newsResponse.articles.map { it.copy(category = category) }
+                    repository.refreshNews(updatedArticles)
+                    _newsList.emit(updatedArticles)
+                } else {
+                    loadCachedNews(category)
+                    withContext(Dispatchers.Main) {
+                        _toastMessage.value = "The server response does not contain any news"
+                    }
+                }
+
+            } catch (e: IOException) {
                 loadCachedNews(category)
+                withContext(Dispatchers.Main) {
+                    _toastMessage.value = "Problem connecting to the internet"
+                }
+            } catch (e: HttpException) {
+                loadCachedNews(category)
+                val message = when (e.code()) {
+                    400 -> "Invalid request (400)"
+                    401 -> "Unauthorized. Check API key.(401)"
+                    403 -> "Access Denied(403)"
+                    404 -> "No news found (404)"
+                    500 -> "Server error (500). Try again later"
+                    else -> "HTTP error: ${e.code()}"
+                }
+                withContext(Dispatchers.Main) {
+                    _toastMessage.value = message
+                }
+            } catch (e: Exception) {
+                loadCachedNews(category)
+                withContext(Dispatchers.Main) {
+                    _toastMessage.value = "Unknown error: ${e.localizedMessage}"
+                }
+            } finally {
+                _isLoading.emit(false)
             }
-
-            _isLoading.value = false
-
         }
     }
 
@@ -75,7 +102,7 @@ class NewsViewModel(
                     )
                 }
 
-                if (response.status == "ok") {
+                if (response.status.lowercase() == "ok") {
                     val favorites = repository.getFavoriteArticles()
                     val updatedArticles = response.articles.map { article ->
                         article.copy(
@@ -87,16 +114,30 @@ class NewsViewModel(
                     insertNewsWithErrorHandling(updatedArticles)
                 } else {
                     loadCachedNews(category)
+                    _toastMessage.postValue("The server response does not contain any news.")
                 }
-            } catch (e: Exception) {
-                Log.e("NewsViewModel", "Error fetching news: ${e.message}")
+            } catch (e: IOException) {
                 loadCachedNews(category)
+                _toastMessage.postValue("Problem with internet connection")
+            } catch (e: HttpException) {
+                loadCachedNews(category)
+                val message = when (e.code()) {
+                    400 -> "Invalid request(400)"
+                    401 -> "Unauthorized. Check API key.(401)"
+                    403 -> "Access Denied (403)"
+                    404 -> "No news found(404)"
+                    500 -> "Server error (500). Try again later."
+                    else -> "HTTP error: ${e.code()}"
+                }
+                _toastMessage.postValue(message)
+            } catch (e: Exception) {
+                loadCachedNews(category)
+                _toastMessage.postValue("An unknown error occurred: ${e.localizedMessage}")
             } finally {
                 _isLoading.value = false
             }
         }
     }
-
 
     private fun loadCachedNews(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -124,7 +165,6 @@ class NewsViewModel(
                     if (it.url == updatedArticle.url) updatedArticle else it
                 }
             }
-
             loadFavorites()
         }
     }

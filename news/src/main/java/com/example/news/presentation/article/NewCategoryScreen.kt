@@ -1,4 +1,4 @@
-package com.example.news.presentation
+package com.example.news.presentation.article
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,7 +16,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-
+import com.example.news.presentation.NewsList
+import com.example.news.presentation.NewsViewModel
 
 
 @Composable

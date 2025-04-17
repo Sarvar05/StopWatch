@@ -1,10 +1,8 @@
 package com.example.myapplication.drawer
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.ui.graphics.vector.ImageVector
 
 
@@ -30,14 +28,14 @@ val listOfNavItems = listOf(
     ),
     NavItems(
         title = "Stopwatch",
-        unselectedIcon = Icons.Outlined.MailOutline,
-        selectedIcon = Icons.Filled.Email,
+        unselectedIcon = Icons.Outlined.Home,
+        selectedIcon = Icons.Filled.Home,
         route = Screens.Stopwatch.route
     ),
     NavItems(
         title = "News",
-        unselectedIcon = Icons.Outlined.MailOutline,
-        selectedIcon = Icons.Filled.Email,
+        unselectedIcon = Icons.Outlined.Home,
+        selectedIcon = Icons.Filled.Home,
         route = Screens.NewsApp.route
     )
 )

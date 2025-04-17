@@ -1,7 +1,5 @@
 package com.example.news.data
 
-import com.example.news.data.NewsApiService
-import com.example.news.data.NewsDao
 import com.example.news.domain.NewsResponse
 
 
