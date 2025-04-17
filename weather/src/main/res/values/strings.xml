@@ -13,7 +13,7 @@
     <string name="loading">Загрузка...</string>
     <string name="unknown">Неизвестно</string>
     <string name="updated">Обновить</string>
-    <string name="weather_title">Погода в Ташкенте</string>
+    <string name="weather_title">Ташкент</string>
     <string name="update_button">Обновить</string>
     <string name="wind">Ветер</string>
     <string name="humidity">Влажность</string>

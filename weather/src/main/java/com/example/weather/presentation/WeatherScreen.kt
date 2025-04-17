@@ -184,7 +184,7 @@ fun WeatherDetailsCard(wind: Float, humidity: Int) {
 fun getWeatherIcon(description: String): Int {
     return when {
         description.contains("clear", ignoreCase = true) -> R.drawable.sun_img
-        description.contains("cloud", ignoreCase = true) -> R.drawable.cloudy_img
+        description.contains("cloud", ignoreCase = true) -> R.drawable.ic_cloudy
         description.contains("rain", ignoreCase = true) -> R.drawable.rain_img
         else -> R.drawable.sun_img
     }
