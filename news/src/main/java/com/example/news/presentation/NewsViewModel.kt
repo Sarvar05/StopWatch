@@ -82,7 +82,6 @@ class NewsViewModel(
             }
         }
     }
-
     fun getNewsByCategory(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
