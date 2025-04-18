@@ -40,7 +40,6 @@ class NewsViewModel(
         viewModelScope.launch(Dispatchers.IO) {
             try {
                 _isLoading.emit(true)
-
                 val newsResponse = repository.fetchNewsFromApi(category)
 
                 if (newsResponse.status.lowercase() == "ok" && newsResponse.articles.isNotEmpty()) {
@@ -48,40 +47,16 @@ class NewsViewModel(
                     repository.refreshNews(updatedArticles)
                     _newsList.emit(updatedArticles)
                 } else {
-                    loadCachedNews(category)
-                    withContext(Dispatchers.Main) {
-                        _toastMessage.value = "The server response does not contain any news"
-                    }
+                    handleInvalidStatus(category)
                 }
-
-            } catch (e: IOException) {
-                loadCachedNews(category)
-                withContext(Dispatchers.Main) {
-                    _toastMessage.value = "Problem connecting to the internet"
-                }
-            } catch (e: HttpException) {
-                loadCachedNews(category)
-                val message = when (e.code()) {
-                    400 -> "Invalid request (400)"
-                    401 -> "Unauthorized. Check API key.(401)"
-                    403 -> "Access Denied(403)"
-                    404 -> "No news found (404)"
-                    500 -> "Server error (500). Try again later"
-                    else -> "HTTP error: ${e.code()}"
-                }
-                withContext(Dispatchers.Main) {
-                    _toastMessage.value = message
-                }
-            } catch (e: Exception) {
-                loadCachedNews(category)
-                withContext(Dispatchers.Main) {
-                    _toastMessage.value = "Unknown error: ${e.localizedMessage}"
-                }
+            } catch (e: Throwable) {
+                handleError(e, category)
             } finally {
                 _isLoading.emit(false)
             }
         }
     }
+
     fun getNewsByCategory(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
             _isLoading.value = true
@@ -110,31 +85,16 @@ class NewsViewModel(
                     _newsList.value = updatedArticles
                     insertNewsWithErrorHandling(updatedArticles)
                 } else {
-                    loadCachedNews(category)
-                    _toastMessage.postValue("The server response does not contain any news.")
+                    handleInvalidStatus(category)
                 }
-            } catch (e: IOException) {
-                loadCachedNews(category)
-                _toastMessage.postValue("Problem with internet connection")
-            } catch (e: HttpException) {
-                loadCachedNews(category)
-                val message = when (e.code()) {
-                    400 -> "Invalid request(400)"
-                    401 -> "Unauthorized. Check API key.(401)"
-                    403 -> "Access Denied (403)"
-                    404 -> "No news found(404)"
-                    500 -> "Server error (500). Try again later."
-                    else -> "HTTP error: ${e.code()}"
-                }
-                _toastMessage.postValue(message)
-            } catch (e: Exception) {
-                loadCachedNews(category)
-                _toastMessage.postValue("An unknown error occurred: ${e.localizedMessage}")
+            } catch (e: Throwable) {
+                handleError(e, category)
             } finally {
                 _isLoading.value = false
             }
         }
     }
+
 
     private fun loadCachedNews(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -165,6 +125,35 @@ class NewsViewModel(
             loadFavorites()
         }
     }
+
+    private suspend fun handleError(e: Throwable, category: String) {
+        loadCachedNews(category)
+        val message = when (e) {
+            is IOException -> "Problem with internet connection"
+            is HttpException -> when (e.code()) {
+                400 -> "Invalid request (400)"
+                401 -> "Unauthorized. Check API key (401)"
+                403 -> "Access Denied (403)"
+                404 -> "No news found (404)"
+                500 -> "Server error (500). Try again later"
+                else -> "HTTP error: ${e.code()}"
+            }
+
+            else -> "An unknown error occurred: ${e.localizedMessage}"
+        }
+
+        withContext(Dispatchers.Main) {
+            _toastMessage.value = message
+        }
+    }
+
+    private suspend fun handleInvalidStatus(category: String) {
+        loadCachedNews(category)
+        withContext(Dispatchers.Main) {
+            _toastMessage.value = "The server response does not contain any news"
+        }
+    }
+
 
     suspend fun insertNewsWithErrorHandling(newsList: List<NewsArticle>) {
         try {
