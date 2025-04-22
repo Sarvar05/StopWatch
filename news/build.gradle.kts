@@ -13,7 +13,7 @@ android {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
-        buildConfigField("String","API_KEY", "\"922359aac397424a9c3e73a984948bce\"")
+        buildConfigField("String", "API_KEY", "\"922359aac397424a9c3e73a984948bce\"")
     }
 
     buildTypes {

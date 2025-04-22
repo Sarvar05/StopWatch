@@ -6,6 +6,7 @@ import com.example.news.data.local.NewsDao
 import com.example.news.data.remote.NewsApiService
 import com.example.news.domain.NewsResponse
 import com.example.news.domain.Resource
+import com.example.news.data.exception.CategoryException
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -29,19 +30,19 @@ class NewsRepository(
             } else {
                 apiService.getNewsByCategory(category.lowercase(), "us", BuildConfig.API_KEY)
             }
-
             if (response.status.lowercase() == "ok") {
                 Resource.Success(response)
             } else {
-                Resource.Error("Invalid response status: ${response.status}")
+                Resource.Error("Invalid response status: ${response.status}", CategoryException(category, "Invalid response status: ${response.status}"))
             }
+
         } catch (e: IOException) {
-            Resource.Error("No internet connection", e)
+            Resource.Error("No internet connection", CategoryException(category, "No internet connection", e))
         } catch (e: HttpException) {
             val message = getHttpErrorMessage(e.code())
-            Resource.Error(message, e)
+            Resource.Error(message, CategoryException(category, message, e))
         } catch (e: Exception) {
-            Resource.Error("Unexpected error: ${e.localizedMessage}", e)
+            Resource.Error("Unexpected error: ${e.localizedMessage}", CategoryException(category, "Unexpected error", e))
         }
     }
 

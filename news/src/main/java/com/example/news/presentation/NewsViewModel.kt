@@ -3,6 +3,7 @@ package com.example.news.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.news.data.exception.CategoryException
 import com.example.news.data.local.NewsArticle
 import com.example.news.data.repository.NewsRepository
 import com.example.news.domain.Resource
@@ -30,6 +31,7 @@ class NewsViewModel(
 
     private val _toastMessage = MutableLiveData<String?>()
 
+
     init {
         loadNews("All")
         loadFavorites()
@@ -48,19 +50,26 @@ class NewsViewModel(
                             isFavorite = favorites.any { it.url == article.url }
                         )
                     }
-
                     repository.refreshNews(updatedArticles)
                     _newsList.emit(updatedArticles)
                 }
 
                 is Resource.Error -> {
-                    handleError(result.throwable ?: Exception(result.message), category)
+                    val error = result.throwable
+                    _toastMessage.postValue(
+                        when (error) {
+                            is CategoryException -> "Category error'${error.category}': ${result.message}"
+                            else -> "Error: ${result.message}"
+                        }
+                    )
+                    handleError(error ?: Exception(result.message), category)
                 }
             }
 
             _isLoading.emit(false)
         }
     }
+
 
     private suspend fun handleError(e: Throwable, category: String) {
         val message = when (e) {
