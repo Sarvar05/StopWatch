@@ -55,8 +55,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.example.news.R
-import com.example.news.data.DatabaseProvider
-import com.example.news.data.NewsArticle
+import com.example.news.data.local.DatabaseProvider
+import com.example.news.data.local.NewsArticle
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +76,7 @@ fun NewsApp(
 
     LaunchedEffect(selectedCategory.value) {
         if (selectedCategory.value != "Favorites") {
-            viewModel.getNewsByCategory(selectedCategory.value)
+            viewModel.loadNews(selectedCategory.value)
         }
     }
 
@@ -97,7 +97,7 @@ fun NewsApp(
         isRefreshing = isLoading,
         onRefresh = {
             if (selectedCategory.value != "Favorites") {
-                viewModel.getNewsByCategory(selectedCategory.value)
+                viewModel.loadNews(selectedCategory.value)
             }
         },
         state = state,

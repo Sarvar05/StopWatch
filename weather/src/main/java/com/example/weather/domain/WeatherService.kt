@@ -1,10 +1,8 @@
-package com.example.weather.presentation
+package com.example.weather.domain
 
 import com.example.weather.data.WeatherResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
-
-const val API_KEY_WEATHER = "2446e3823cfb46b7bc8d950370133f9c"
 
 interface WeatherService {
 

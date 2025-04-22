@@ -2,7 +2,7 @@ package com.example.news.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.news.data.NewsRepository
+import com.example.news.data.repository.NewsRepository
 
 @Suppress("UNCHECKED_CAST")
 class NewsViewModelFactory(private val repository: NewsRepository) : ViewModelProvider.Factory {

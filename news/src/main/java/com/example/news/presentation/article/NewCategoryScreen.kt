@@ -27,7 +27,7 @@ fun NewCategoryScreen(category: String, navController: NavController) {
     val isLoading = viewModel.isLoading.collectAsState(initial = true).value
 
     LaunchedEffect(category) {
-        viewModel.getNewsByCategory(category)
+        viewModel.loadNews(category)
     }
 
     Column(modifier = Modifier

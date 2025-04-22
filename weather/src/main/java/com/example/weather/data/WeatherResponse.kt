@@ -1,6 +1,5 @@
 package com.example.weather.data
 
-import com.example.weather.data.Wind
 
 data class WeatherResponse(
     val main: Main,

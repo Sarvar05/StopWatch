@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.weather.BuildConfig
 import com.example.weather.R
 import com.example.weather.domain.RetrofitInstance
 import kotlinx.coroutines.launch
@@ -57,7 +58,7 @@ fun WeatherScreen() {
         coroutineScope.launch {
             try {
                 val response = RetrofitInstance.api.getWeather("Tashkent",
-                  API_KEY_WEATHER
+                    BuildConfig.API_KEY
                 )
 
                 temperature = response.main.temp

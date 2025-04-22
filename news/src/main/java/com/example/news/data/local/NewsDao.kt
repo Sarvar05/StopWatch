@@ -1,4 +1,4 @@
-package com.example.news.data
+package com.example.news.data.local
 
 import androidx.room.Dao
 import androidx.room.Insert

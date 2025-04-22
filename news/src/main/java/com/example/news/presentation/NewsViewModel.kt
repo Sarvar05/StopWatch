@@ -3,9 +3,9 @@ package com.example.news.presentation
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.news.data.NewsArticle
-import com.example.news.data.NewsRepository
-import com.example.news.data.RetrofitInstance
+import com.example.news.data.local.NewsArticle
+import com.example.news.data.repository.NewsRepository
+import com.example.news.domain.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,146 +22,78 @@ class NewsViewModel(
     private val _newsList = MutableStateFlow<List<NewsArticle>>(emptyList())
     val newsList: StateFlow<List<NewsArticle>> = _newsList
 
-    private val _isLoading = MutableStateFlow(true)
-    val isLoading: StateFlow<Boolean> = _isLoading
-
     private val _favoriteNewsList = MutableStateFlow<List<NewsArticle>>(emptyList())
     val favoriteNewsList: StateFlow<List<NewsArticle>> = _favoriteNewsList
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading
 
     private val _toastMessage = MutableLiveData<String?>()
 
     init {
         loadNews("All")
-        getNewsByCategory("All")
         loadFavorites()
     }
 
     fun loadNews(category: String) {
         viewModelScope.launch(Dispatchers.IO) {
-            try {
-                _isLoading.emit(true)
-                val newsResponse = repository.fetchNewsFromApi(category)
+            _isLoading.emit(true)
 
-                if (newsResponse.status.lowercase() == "ok" && newsResponse.articles.isNotEmpty()) {
-                    val updatedArticles = newsResponse.articles.map { it.copy(category = category) }
-                    repository.refreshNews(updatedArticles)
-                    _newsList.emit(updatedArticles)
-                } else {
-                    handleInvalidStatus(category)
-                }
-            } catch (e: Throwable) {
-                handleError(e, category)
-            } finally {
-                _isLoading.emit(false)
-            }
-        }
-    }
-
-    fun getNewsByCategory(category: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
-            try {
-                val response = if (category == "All") {
-                    RetrofitInstance.api.getTopHeadlines(
-                        country = "us",
-                        apiKey = "922359aac397424a9c3e73a984948bce"
-                    )
-                } else {
-                    RetrofitInstance.api.getNewsByCategory(
-                        category = category.lowercase(),
-                        country = "us",
-                        apiKey = "922359aac397424a9c3e73a984948bce"
-                    )
-                }
-
-                if (response.status.lowercase() == "ok") {
+            when (val result = repository.fetchNewsFromApi(category)) {
+                is Resource.Success -> {
                     val favorites = repository.getFavoriteArticles()
-                    val updatedArticles = response.articles.map { article ->
+                    val updatedArticles = result.data.articles.map { article ->
                         article.copy(
                             category = category,
-                            isFavorite = favorites.any { it.title == article.title }
+                            isFavorite = favorites.any { it.url == article.url }
                         )
                     }
-                    _newsList.value = updatedArticles
-                    insertNewsWithErrorHandling(updatedArticles)
-                } else {
-                    handleInvalidStatus(category)
+
+                    repository.refreshNews(updatedArticles)
+                    _newsList.emit(updatedArticles)
                 }
-            } catch (e: Throwable) {
-                handleError(e, category)
-            } finally {
-                _isLoading.value = false
-            }
-        }
-    }
 
-
-    private fun loadCachedNews(category: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val cachedNews = repository.getNewsByCategory(category)
-            _newsList.value = cachedNews
-        }
-    }
-
-    private fun loadFavorites() {
-        viewModelScope.launch(Dispatchers.IO) {
-            val favoriteArticles = repository.getFavoriteArticles()
-            _favoriteNewsList.value = favoriteArticles
-        }
-    }
-
-    fun toggleFavorite(article: NewsArticle) {
-        viewModelScope.launch(Dispatchers.IO) {
-            val updatedArticle = article.copy(isFavorite = !article.isFavorite)
-            repository.updateArticleFavoriteStatus(
-                updatedArticle.url,
-                updatedArticle.isFavorite
-            )
-            _newsList.update { currentList ->
-                currentList.map {
-                    if (it.url == updatedArticle.url) updatedArticle else it
+                is Resource.Error -> {
+                    handleError(result.throwable ?: Exception(result.message), category)
                 }
             }
-            loadFavorites()
+
+            _isLoading.emit(false)
         }
     }
 
     private suspend fun handleError(e: Throwable, category: String) {
-        loadCachedNews(category)
         val message = when (e) {
-            is IOException -> "Problem with internet connection"
-            is HttpException -> when (e.code()) {
-                400 -> "Invalid request (400)"
-                401 -> "Unauthorized. Check API key (401)"
-                403 -> "Access Denied (403)"
-                404 -> "No news found (404)"
-                500 -> "Server error (500). Try again later"
-                else -> "HTTP error: ${e.code()}"
-            }
-
-            else -> "An unknown error occurred: ${e.localizedMessage}"
+            is IOException -> "No internet connection"
+            is HttpException -> repository.getHttpErrorMessage(e.code())
+            else -> "Unexpected error: ${e.localizedMessage}"
         }
+
+        val cachedNews = repository.getNewsByCategory(category)
+        _newsList.emit(cachedNews)
 
         withContext(Dispatchers.Main) {
             _toastMessage.value = message
         }
     }
 
-    private suspend fun handleInvalidStatus(category: String) {
-        loadCachedNews(category)
-        withContext(Dispatchers.Main) {
-            _toastMessage.value = "The server response does not contain any news"
+    fun toggleFavorite(article: NewsArticle) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val updated = article.copy(isFavorite = !article.isFavorite)
+            repository.updateArticleFavoriteStatus(updated.url, updated.isFavorite)
+
+            _newsList.update { list ->
+                list.map { if (it.url == updated.url) updated else it }
+            }
+
+            loadFavorites()
         }
     }
 
-
-    suspend fun insertNewsWithErrorHandling(newsList: List<NewsArticle>) {
-        try {
-            if (newsList.isNotEmpty()) {
-                repository.insertNews(newsList)
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
+    private fun loadFavorites() {
+        viewModelScope.launch(Dispatchers.IO) {
+            val favorites = repository.getFavoriteArticles()
+            _favoriteNewsList.emit(favorites)
         }
     }
 }

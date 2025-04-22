@@ -1,6 +1,6 @@
 package com.example.news.domain
 
-import com.example.news.data.NewsArticle
+import com.example.news.data.local.NewsArticle
 
 data class NewsResponse(
     val status: String,

@@ -6,7 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import com.example.myapplication.drawer.SetupNavigation
-import com.example.news.data.DatabaseProvider
+import com.example.news.data.local.DatabaseProvider
 import com.example.weather.presentation.ui.theme.MyApplicationTheme
 import dagger.hilt.android.HiltAndroidApp
 @RequiresApi(Build.VERSION_CODES.O)

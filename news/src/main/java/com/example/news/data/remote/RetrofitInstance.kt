@@ -1,4 +1,4 @@
-package com.example.news.data
+package com.example.news.data.remote
 
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
