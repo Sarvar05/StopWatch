@@ -1,4 +1,4 @@
-package com.example.news.data.remote
+package com.example.news.data.mapper
 
 import com.example.news.data.local.NewsArticle
 import com.example.news.domain.NewsArticleDto

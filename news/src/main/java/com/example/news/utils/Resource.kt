@@ -1,4 +1,4 @@
-package com.example.news.domain
+package com.example.news.utils
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T) : Resource<T>()

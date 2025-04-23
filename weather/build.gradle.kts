@@ -76,4 +76,6 @@ dependencies {
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.foundation)
     implementation (libs.glide)
+    implementation(project(":news"))
+
 }

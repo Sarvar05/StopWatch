@@ -1,20 +1,21 @@
 package com.example.news.presentation
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.news.data.exception.CategoryException
 import com.example.news.data.local.NewsArticle
 import com.example.news.data.repository.NewsRepository
-import com.example.news.domain.Resource
+import com.example.news.utils.Resource
+import com.example.news.utils.toErrorMessage
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
-import java.io.IOException
+
 
 class NewsViewModel(
     private val repository: NewsRepository
@@ -31,6 +32,11 @@ class NewsViewModel(
 
     private val _toastMessage = MutableLiveData<String?>()
 
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Log.e("NewsViewModel", "Error: ${throwable.localizedMessage}", throwable)
+        _toastMessage.postValue("Error: ${throwable.localizedMessage}")
+        _isLoading.value = false
+    }
 
     init {
         loadNews("All")
@@ -38,10 +44,14 @@ class NewsViewModel(
     }
 
     fun loadNews(category: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main + coroutineExceptionHandler) {
             _isLoading.emit(true)
 
-            when (val result = repository.fetchNewsFromApi(category)) {
+            val result = withContext(Dispatchers.IO) {
+                repository.fetchNewsFromApi(category)
+            }
+
+            when (result) {
                 is Resource.Success -> {
                     val favorites = repository.getFavoriteArticles()
                     val updatedArticles = result.data.articles.map { article ->
@@ -55,14 +65,10 @@ class NewsViewModel(
                 }
 
                 is Resource.Error -> {
-                    val error = result.throwable
-                    _toastMessage.postValue(
-                        when (error) {
-                            is CategoryException -> "Category error'${error.category}': ${result.message}"
-                            else -> "Error: ${result.message}"
-                        }
-                    )
-                    handleError(error ?: Exception(result.message), category)
+                    val error = result.throwable ?: Exception(result.message)
+                    val cachedNews = repository.getNewsByCategory(category)
+                    _newsList.emit(cachedNews)
+                    _toastMessage.postValue(error.toErrorMessage(repository))
                 }
             }
 
@@ -70,21 +76,6 @@ class NewsViewModel(
         }
     }
 
-
-    private suspend fun handleError(e: Throwable, category: String) {
-        val message = when (e) {
-            is IOException -> "No internet connection"
-            is HttpException -> repository.getHttpErrorMessage(e.code())
-            else -> "Unexpected error: ${e.localizedMessage}"
-        }
-
-        val cachedNews = repository.getNewsByCategory(category)
-        _newsList.emit(cachedNews)
-
-        withContext(Dispatchers.Main) {
-            _toastMessage.value = message
-        }
-    }
 
     fun toggleFavorite(article: NewsArticle) {
         viewModelScope.launch(Dispatchers.IO) {

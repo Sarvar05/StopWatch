@@ -1,5 +1,6 @@
-package com.example.news.data.remote
+package com.example.news.data.retrofit
 
+import com.example.news.data.service.NewsApiService
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -8,7 +9,7 @@ import java.util.concurrent.TimeUnit
 object
 RetrofitInstance {
     private const val BASE_URL = "https://newsapi.org/v2/"
-    private const val TIMEOUT_MINUTES=60L
+    private const val TIMEOUT_MINUTES = 60L
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(TIMEOUT_MINUTES, TimeUnit.SECONDS)

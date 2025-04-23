@@ -3,7 +3,7 @@ package com.example.news.data.local
 import android.content.Context
 import androidx.room.Room
 import com.example.news.data.repository.NewsRepository
-import com.example.news.data.remote.RetrofitInstance
+import com.example.news.data.retrofit.RetrofitInstance
 
 object DatabaseProvider {
     private lateinit var database: AppDatabase

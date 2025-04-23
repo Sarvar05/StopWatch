@@ -1,6 +1,7 @@
-package com.example.weather.domain
+package com.example.weather.retrofit
 
 import com.example.weather.BuildConfig
+import com.example.weather.service.WeatherService
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

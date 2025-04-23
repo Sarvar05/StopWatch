@@ -1,4 +1,4 @@
-package com.example.weather.domain
+package com.example.weather.service
 
 import com.example.weather.data.WeatherResponse
 import retrofit2.http.GET

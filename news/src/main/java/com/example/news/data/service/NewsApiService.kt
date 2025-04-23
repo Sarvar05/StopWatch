@@ -1,4 +1,4 @@
-package com.example.news.data.remote
+package com.example.news.data.service
 
 import com.example.news.domain.NewsResponse
 import retrofit2.http.GET
