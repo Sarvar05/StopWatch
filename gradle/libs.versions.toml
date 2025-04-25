@@ -1,6 +1,7 @@
 [versions]
 activityComposeVersion = "1.6.0"
 agp = "8.9.0"
+androidxHiltCompiler = "1.0.0"
 androidxMaterial3 = "1.0.0-alpha01"
 coilCompose = "2.0.0-rc02"
 coilComposeVersion = "2.1.0"
@@ -12,8 +13,13 @@ drawerlayoutVersion = "1.1.1"
 foundation = "1.7.8"
 glide = "4.16.0"
 gson = "2.8.8"
+hiltAndroid = "2.50"
+hiltAndroidVersion = "2.44"
+hiltCompiler = "2.44"
+hiltCompilerVersion = "1.2.0"
 hiltLifecycleViewmodel = "1.0.0-alpha03"
 hiltNavigationCompose = "1.0.0"
+hiltNavigationComposeVersion = "1.1.0"
 jsoup = "1.15.2"
 kotlin = "2.0.21"
 coreKtx = "1.10.1"
@@ -55,8 +61,11 @@ androidx-datastore-preferences-v100 = { module = "androidx.datastore:datastore-p
 androidx-drawerlayout = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayout" }
 androidx-drawerlayout-v111 = { module = "androidx.drawerlayout:drawerlayout", version.ref = "drawerlayoutVersion" }
 androidx-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "foundation" }
+androidx-hilt-compiler = { module = "androidx.hilt:hilt-compiler", version.ref = "hiltCompilerVersion" }
+androidx-hilt-compiler-v100 = { module = "androidx.hilt:hilt-compiler", version.ref = "androidxHiltCompiler" }
 androidx-hilt-lifecycle-viewmodel = { module = "androidx.hilt:hilt-lifecycle-viewmodel", version.ref = "hiltLifecycleViewmodel" }
 androidx-hilt-navigation-compose = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
+androidx-hilt-navigation-compose-v110 = { module = "androidx.hilt:hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion" }
 androidx-lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
 androidx-lifecycle-livedata-ktx-v287 = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtxVersion" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
@@ -75,6 +84,10 @@ coil-compose-v210 = { module = "io.coil-kt:coil-compose", version.ref = "coilCom
 converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-v244 = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroidVersion" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltAndroid" }
+hilt-compiler-v244 = { module = "com.google.dagger:hilt-compiler", version.ref = "hiltCompiler" }
 jsoup = { module = "org.jsoup:jsoup", version.ref = "jsoup" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }

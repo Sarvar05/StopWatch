@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
 
 }
@@ -34,6 +35,7 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+
     kotlinOptions {
         jvmTarget = "11"
     }
@@ -52,7 +54,12 @@ android {
 }
 
 dependencies {
-
+    implementation(libs.hilt.android.v244)
+    ksp(libs.hilt.compiler.v244)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel)
+    ksp(libs.androidx.hilt.compiler)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.hilt.navigation.compose.v110)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -101,8 +108,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx.v287)
     implementation(libs.androidx.datastore.preferences.v100)
     implementation(libs.coil.compose.v210)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.foundation)
     implementation (libs.glide)
     implementation(project(":news"))

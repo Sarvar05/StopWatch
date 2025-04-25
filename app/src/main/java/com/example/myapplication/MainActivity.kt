@@ -8,11 +8,10 @@ import androidx.annotation.RequiresApi
 import com.example.myapplication.drawer.SetupNavigation
 import com.example.news.data.local.DatabaseProvider
 import com.example.weather.presentation.ui.theme.MyApplicationTheme
-import dagger.hilt.android.HiltAndroidApp
-@RequiresApi(Build.VERSION_CODES.O)
-@HiltAndroidApp
-class MainActivity : ComponentActivity() {
+import dagger.hilt.android.AndroidEntryPoint
 
+@RequiresApi(Build.VERSION_CODES.O)
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

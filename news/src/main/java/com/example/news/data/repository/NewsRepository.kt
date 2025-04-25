@@ -10,7 +10,7 @@ import com.example.news.utils.Resource
 import com.example.news.utils.toCategoryError
 import com.example.news.utils.toErrorMessage
 
-class NewsRepository(
+class NewsRepository (
     private val newsDao: NewsDao,
     private val apiService: NewsApiService
 ) {

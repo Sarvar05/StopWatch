@@ -2,7 +2,9 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
+
 }
 
 android {
@@ -36,9 +38,16 @@ android {
     buildFeatures {
         buildConfig = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.3"
+    }
 }
 
 dependencies {
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler)
+    implementation(libs.androidx.hilt.lifecycle.viewmodel)
+    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -72,8 +81,6 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx.v287)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.coil.compose.v210)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-    implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.foundation)
     implementation(libs.glide)
 
