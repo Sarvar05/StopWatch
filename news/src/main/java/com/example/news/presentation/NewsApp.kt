@@ -51,11 +51,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.bumptech.glide.Glide
 import com.example.news.R
-import com.example.news.data.local.DatabaseProvider
 import com.example.news.data.local.NewsArticle
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -64,8 +63,7 @@ import com.example.news.data.local.NewsArticle
 fun NewsApp(
     navController: NavController
 ) {
-    val repository = DatabaseProvider.getRepository()
-    val viewModel: NewsViewModel = viewModel(factory = NewsViewModelFactory(repository))
+    val viewModel: NewsViewModel = hiltViewModel()
 
     val categories = listOf("All", "Sports", "Business", "Technology", "Health", "Favorites")
     val selectedCategory = rememberSaveable { mutableStateOf("All") }

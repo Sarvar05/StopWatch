@@ -1,10 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
-    id("com.google.devtools.ksp")
-
+    kotlin("kapt")
 }
 
 android {
@@ -17,13 +16,13 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        multiDexEnabled = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -46,6 +45,9 @@ android {
         compose = true
 
     }
+    kapt {
+        correctErrorTypes = true
+    }
 
 
     composeOptions {
@@ -54,62 +56,58 @@ android {
 }
 
 dependencies {
-    implementation(libs.hilt.android.v244)
-    ksp(libs.hilt.compiler.v244)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
-    ksp(libs.androidx.hilt.compiler)
-    implementation(libs.androidx.core.ktx)
+
+    implementation(libs.multidex)
+
     implementation(libs.androidx.hilt.navigation.compose.v110)
+    implementation(libs.hilt.android.v244)
+    kapt(libs.hilt.compiler.v244)
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    implementation(libs.material)
     implementation(libs.androidx.activity)
+
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.activity.compose)
+
     implementation(platform(libs.androidx.compose.bom))
+    implementation(libs.androidx.activity.compose)
+
+    implementation(libs.material)
+    implementation(libs.androidx.material3)
+
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
     implementation(libs.androidx.ui.android)
+
     testImplementation(libs.junit)
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.ui.test.junit4)
+
     debugImplementation(libs.androidx.ui.tooling)
+    implementation(libs.androidx.ui.tooling.preview.v150)
+
     debugImplementation(libs.androidx.ui.test.manifest)
-    implementation(libs.ui)
-    implementation(libs.androidx.material3.v100)
-    implementation(libs.okhttp)
-    implementation(libs.kotlinx.coroutines.android.v152)
+
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.androidx.navigation.fragment.ktx)
+
     implementation(libs.ui.tooling.preview)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    implementation(libs.retrofit)
-    implementation(libs.converter.gson)
-    implementation(libs.logging.interceptor)
-    implementation(libs.androidx.navigation.compose)
+
     implementation(libs.androidx.drawerlayout)
-    implementation(libs.androidx.activity.compose.v160)
-    implementation(libs.gson)
-    implementation(libs.androidx.material3.v100alpha01)
-    implementation(libs.androidx.drawerlayout.v111)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.ui.tooling.preview.v150)
-    implementation(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
+
+
     implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.coil.compose)
-    implementation(libs.androidx.webkit)
-    implementation(libs.jsoup)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx.v287)
-    implementation(libs.androidx.datastore.preferences.v100)
-    implementation(libs.coil.compose.v210)
+
     implementation(libs.androidx.foundation)
-    implementation (libs.glide)
+
     implementation(project(":news"))
     implementation(project(":weather"))
     implementation(project(":timer"))

@@ -72,10 +72,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx.v287)
     implementation(libs.androidx.datastore.preferences.v100)
     implementation(libs.coil.compose.v210)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.foundation)
     implementation (libs.glide)
-    implementation(project(":news"))
 
 }

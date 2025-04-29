@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.dagger.hilt.android")
     id("com.google.devtools.ksp")
-
 }
 
 android {
@@ -41,12 +40,14 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3"
     }
+    hilt {
+        enableAggregatingTask = true
+    }
 }
 
 dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
-    implementation(libs.androidx.hilt.lifecycle.viewmodel)
     implementation(libs.androidx.hilt.navigation.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -64,7 +65,6 @@ dependencies {
     implementation(libs.converter.gson)
     implementation(libs.logging.interceptor)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.drawerlayout)
     implementation(libs.androidx.activity.compose.v160)
     implementation(libs.gson)
     implementation(libs.androidx.drawerlayout.v111)

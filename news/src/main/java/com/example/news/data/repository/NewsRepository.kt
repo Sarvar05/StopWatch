@@ -9,8 +9,9 @@ import com.example.news.domain.NewsResponse
 import com.example.news.utils.Resource
 import com.example.news.utils.toCategoryError
 import com.example.news.utils.toErrorMessage
+import javax.inject.Inject
 
-class NewsRepository (
+class NewsRepository @Inject constructor(
     private val newsDao: NewsDao,
     private val apiService: NewsApiService
 ) {

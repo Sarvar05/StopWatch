@@ -8,6 +8,7 @@ import com.example.news.data.local.NewsArticle
 import com.example.news.data.repository.NewsRepository
 import com.example.news.utils.Resource
 import com.example.news.utils.toErrorMessage
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,9 +16,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-
-class NewsViewModel(
+@HiltViewModel
+class NewsViewModel @Inject constructor(
     private val repository: NewsRepository
 ) : ViewModel() {
 

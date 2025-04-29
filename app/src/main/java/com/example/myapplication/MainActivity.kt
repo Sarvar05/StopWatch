@@ -8,16 +8,19 @@ import androidx.annotation.RequiresApi
 import com.example.myapplication.drawer.SetupNavigation
 import com.example.news.data.local.DatabaseProvider
 import com.example.weather.presentation.ui.theme.MyApplicationTheme
+
 import dagger.hilt.android.AndroidEntryPoint
 
 @RequiresApi(Build.VERSION_CODES.O)
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DatabaseProvider.init(this)
+
+           DatabaseProvider.init(this)
             MyApplicationTheme {
-                SetupNavigation()
+               SetupNavigation()
             }
         }
     }
